@@ -3,11 +3,11 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # Folder with your Excel files
-EXCEL_FOLDER = r"C:\Users\Matias\Desktop\sql project\data"
+EXCEL_FOLDER = r"C:\Users\matia\Desktop\sql eprel project\eprel-sql-project\data"
 
 # Connection string to local SQL Express with trusted connection
 engine = create_engine(
-    "mssql+pyodbc://localhost\\SQLEXPRESS/eprel?trusted_connection=yes&Encrypt=no&driver=ODBC+Driver+18+for+SQL+Server"
+    r"mssql+pyodbc://Matu_LP\SQLEXPRESS/eprel?trusted_connection=yes&Encrypt=no&driver=ODBC+Driver+18+for+SQL+Server"
 )
 
 # Loop through all Excel files in folder
