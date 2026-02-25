@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 
 API_BASE = "https://eprel.ec.europa.eu/api"
-API_KEY = "A2CmD1dtuj3sZxLmumwfA9kktezviY4O9LRHyiQl" 
+API_KEY = "" 
 
 BASE_DATA_PATH = r"C:\Users\Matias\Desktop\sql project\data"
 os.makedirs(BASE_DATA_PATH, exist_ok=True)
