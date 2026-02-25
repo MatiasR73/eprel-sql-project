@@ -15,5 +15,8 @@ Import all fetched .xlsx files into the SQL localhost server using script:
 Step 4:
 "create-id-column.sql" to simplify accessing product ID's
 "count-of-products-by-organisation.sql" to list all organisations from all tables and count their occurences.
+"create-energyclass-table-for-ranking.sql" to make a table of energyclasses and assign point variable to them.
+"rank-organisations-by-energyclasspoints" to list organisations from single table and rank them by how high energyclass avg they have.
+
 
 
