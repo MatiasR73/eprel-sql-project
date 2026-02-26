@@ -1,2 +1,2 @@
- SELECT id, eprelRegistrationNumber
+ SELECT *
  FROM [dbo].[airconditioners]
