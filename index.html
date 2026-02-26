@@ -1,59 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 20 Organizations</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top Organizations Pie Chart</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Top 20 Organizations by Product Count</h1>
-    <div style="max-height:600px; overflow-y:auto;">
-        <canvas id="energyChart"></canvas>
-    </div>
+<h1>Top 20 Organizations by Product Count</h1>
+<canvas id="energyChart" width="600" height="600"></canvas>
 
-    <script>
-    fetch('results/count-of-products-by-organisation.csv')
-        .then(r => r.text())
-        .then(t => {
-            // Split rows and remove empty lines
-            let rows = t.split('\n').slice(1).filter(r => r.trim());
-            
-            // Parse CSV
-            rows = rows.map(r => {
-                const c = r.split(',');
-                return { name: c[0], count: parseInt(c[1]) };
-            }).filter(r => !isNaN(r.count));
+<script>
+fetch('results/count-of-products-by-organisation.csv')
+    .then(r => r.text())
+    .then(t => {
+        // Parse CSV rows
+        let rows = t.split('\n').slice(1).map(r => r.trim()).filter(r => r.length > 0);
+        rows = rows.map(r => {
+            const c = r.split(',').map(s => s.trim());
+            return { name: c[0], count: parseInt(c[1]) };
+        }).filter(r => !isNaN(r.count) && r.name);
 
-            // Sort descending by count
-            rows.sort((a,b) => b.count - a.count);
+        // Sort descending by count
+        rows.sort((a,b) => b.count - a.count);
 
-            // Take top 20
-            const top = rows.slice(0, 20);
+        // Take top 20, sum rest into "Other"
+        const top = rows.slice(0,20);
+        const othersCount = rows.slice(20).reduce((sum,r) => sum + r.count, 0);
 
-            // Prepare labels (truncate to first 10 chars) and values
-            const labels = top.map(r => r.name.substring(0,10));
-            const values = top.map(r => r.count);
+        const labels = top.map(r => r.name.length > 10 ? r.name.substring(0,10) + '…' : r.name);
+        const values = top.map(r => r.count);
 
-            new Chart(document.getElementById('energyChart'), {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Number of Products',
-                        data: values,
-                        backgroundColor: 'rgba(54,162,235,0.6)'
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', // horizontal bars
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true } }
+        if (othersCount > 0) {
+            labels.push("Other");
+            values.push(othersCount);
+        }
+
+        new Chart(document.getElementById('energyChart'), {
+            type: 'pie',
+            data: {
+                labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: labels.map((_,i) => `hsl(${i*25 % 360}, 70%, 60%)`)
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const original = context.dataIndex < top.length ? top[context.dataIndex].name : 'Other';
+                                return original + ': ' + context.raw;
+                            }
+                        }
+                    },
+                    legend: { position: 'right' }
                 }
-            });
-        })
-        .catch(e => console.error('Failed to load CSV:', e));
-    </script>
+            }
+        });
+    })
+    .catch(e => console.error('Failed to load CSV:', e));
+</script>
 </body>
 </html>
