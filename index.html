@@ -3,38 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Chart</title>
+    <title>Organization Product Counts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <canvas id="energyChart"></canvas>
+    <h1>Top 20 Organizations by Number of Products</h1>
+    <div style="max-height:600px; overflow-y:auto;">
+        <canvas id="energyChart"></canvas>
+    </div>
 
     <script>
-    // Chart for average energy points per organisation
     fetch('results/count-of-products-by-organisation.csv')
         .then(r => r.text())
         .then(t => {
-            const rows = t.split('\n').slice(1);
-            const labels = [], values = [];
-            rows.forEach(row => { 
-                if (!row) return; 
-                const c = row.split(','); 
-                labels.push(c[0]); 
-                values.push(parseFloat(c[2])); 
-            });
+            const rows = t.split('\n').slice(1)
+                .filter(r => r.trim())
+                .map(r => r.split(','));
+
+            // Sort by count (column 1) descending
+            const sorted = rows.sort((a,b) => parseInt(b[1]) - parseInt(a[1]));
+            
+            // Take top 20
+            const top = sorted.slice(0, 20);
+            const labels = top.map(r => r[0]);
+            const values = top.map(r => parseInt(r[1]));
+
             new Chart(document.getElementById('energyChart'), {
                 type: 'bar',
-                data: { 
-                    labels, 
+                data: {
+                    labels,
                     datasets: [{
-                        label: 'Avg Points', 
-                        data: values, 
-                        backgroundColor: 'rgba(54,162,235,0.5)'
-                    }] 
+                        label: 'Number of Products',
+                        data: values,
+                        backgroundColor: 'rgba(54,162,235,0.6)'
+                    }]
                 },
                 options: {
+                    indexAxis: 'y', // horizontal bars
                     responsive: true,
-                    plugins: { legend: { display: false } }
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { beginAtZero: true }
+                    }
                 }
             });
         })
