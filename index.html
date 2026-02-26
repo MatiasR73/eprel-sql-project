@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="energyChart"></canvas>
+    <table id="energyClassTable">
+        <thead>
+            <tr>
+                <th>Energy Class</th>
+                <th>Count</th>
+                <th>Percent</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+    // Chart for average energy points per organisation
+    fetch('results/count-of-products-by-organisation.csv')
+        .then(r => r.text())
+        .then(t => {
+            const rows = t.split('\n').slice(1);
+            const labels = [], values = [];
+            rows.forEach(row => { if(!row) return; const c=row.split(','); labels.push(c[0]); values.push(parseFloat(c[2])); });
+            new Chart(document.getElementById('energyChart'), {
+                type: 'bar',
+                data: { labels, datasets:[{label:'Avg Points', data:values, backgroundColor:'rgba(54,162,235,0.5)'}] },
+                options:{responsive:true, plugins:{legend:{display:false}}}
+            });
+        });
+    </script>
+</body>
+</html>
