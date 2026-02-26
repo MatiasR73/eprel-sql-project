@@ -4,7 +4,7 @@
     ON productsTable.energyClass = energyTable.energyClass
 WHERE productsTable.energyClass IS NOT NULL
 GROUP BY productsTable.[organisation.organisationName]
-HAVING COUNT(*) > 50
+HAVING COUNT(*) >= 50
 ORDER BY energypointsavg desc, occurences desc
  
  
