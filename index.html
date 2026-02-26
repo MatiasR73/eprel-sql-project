@@ -6,9 +6,15 @@
 <title>Top 20 Organizations Bar Chart</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+  /* Center the page title */
+  h1 {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
   #chartContainer {
     max-width: 900px;
-    margin: auto;
+    margin: 40px auto; /* center horizontally with some spacing */
   }
 </style>
 </head>
@@ -32,12 +38,16 @@ fetch('results/count-of-products-by-organisation.csv')
         // Sort descending by count and take top 20
         const top = rows.sort((a,b) => b.count - a.count).slice(0,20);
 
-        // Labels truncated to 10 characters
+        // Labels truncated to 10 characters for the axis
         const labels = top.map(r => r.name.length > 10 ? r.name.substring(0,10) + '…' : r.name);
+
+        // Store full names separately for tooltips
+        const fullNames = top.map(r => r.name);
+
         const values = top.map(r => r.count);
 
         new Chart(document.getElementById('energyChart'), {
-            type: 'bar',            // <- Ensure this is 'bar'!
+            type: 'bar',            // horizontal bar chart
             data: {
                 labels,
                 datasets: [{
@@ -54,7 +64,8 @@ fetch('results/count-of-products-by-organisation.csv')
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return top[context.dataIndex].name + ': ' + context.raw;
+                                // Use fullNames array to show full company name
+                                return fullNames[context.dataIndex] + ': ' + context.raw;
                             }
                         }
                     }
