@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energy Points Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Energy Points per Organisation</h1>
+    <canvas id="energyChart"></canvas>
+
+    <script>
+    // Relative path to the CSV file inside "results" folder
+    fetch('results/count-of-products-by-organisation.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1); // skip header
+            const labels = [];
+            const values = [];
+
+            rows.forEach(row => {
+                if(!row.trim()) return; // skip empty lines
+                const cols = row.split(',');
+                labels.push(cols[0]);            // organisation name
+                values.push(parseFloat(cols[2])); // average energy points
+            });
+
+            new Chart(document.getElementById('energyChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Energy Points',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
