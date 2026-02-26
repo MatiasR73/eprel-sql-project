@@ -18,5 +18,6 @@ Step 4:
 "create-energyclass-table-for-ranking.sql" to make a table of energyclasses and assign point variable to them.
 "rank-organisations-by-energyclasspoints" to list organisations from single table and rank them by how high energyclass avg they have.
 
-
+Step 5:
+Create a way to display the results.
 
