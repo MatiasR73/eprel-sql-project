@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   #chartContainer {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
   }
 </style>
@@ -37,17 +37,17 @@ fetch('results/count-of-products-by-organisation.csv')
         const values = top.map(r => r.count);
 
         new Chart(document.getElementById('energyChart'), {
-            type: 'bar',
+            type: 'bar',            // <- Ensure this is 'bar'!
             data: {
                 labels,
                 datasets: [{
                     label: 'Number of Products',
                     data: values,
-                    backgroundColor: 'rgba(54,162,235,0.6)'
+                    backgroundColor: 'rgba(54,162,235,0.7)'
                 }]
             },
             options: {
-                indexAxis: 'y', // horizontal bars
+                indexAxis: 'y',      // horizontal bars
                 responsive: true,
                 plugins: {
                     legend: { display: false },
